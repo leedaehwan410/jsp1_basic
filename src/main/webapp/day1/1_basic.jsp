@@ -35,7 +35,6 @@
 		for(int i=0;i<list.size();i++){
 	%>
 	
-	
 	<li><%= list.get(i) %></li>
 	<%
 		}			//for end
