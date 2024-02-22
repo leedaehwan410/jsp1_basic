@@ -180,4 +180,29 @@ public class TblBuyDao {
 
         return money;
     }
+    
+    public List<BuyVo> selectAll() {
+    	
+        List<BuyVo> list = new ArrayList<>();
+        String sql ="SELECT * from TBL_BUY  ORDER BY BUY_DATE DESC"; 
+          
+        try(
+            Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql))
+		{
+            
+		    ResultSet rs = ps.executeQuery();
+		
+		    while(rs.next()) {
+			    list.add(new BuyVo(rs.getInt(1),
+					rs.getString(2),
+					rs.getString(3),
+					rs.getInt(4),
+                    rs.getDate(5)));
+		    }
+        }catch(SQLException e){
+            System.out.println("고객별 구매내역 실행 예외 발생 : " + e.getMessage());
+        }
+		return list;
+	}
  }
