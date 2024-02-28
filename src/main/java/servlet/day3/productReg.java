@@ -2,6 +2,7 @@ package servlet.day3;
 
 import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -54,11 +55,23 @@ public class productReg extends HttpServlet {
 	   
 	   //db에 저장하기
 	   TblProductDao dao = new TblProductDao();
-	   dao.join(vo);    //pk 아이디 중복값있으면 무결성 오류
+	   int result = dao.insert(vo);    //pk 아이디 중복값있으면 무결성 오류
     
 	   // 서버가 클라이언트에게 "customers.cc로 요청을 보내라." 응답을 보냅니다.
-	   resp.sendRedirect("products.cc");
+//	   resp.sendRedirect("products.cc");   //=> 대신에 alert 출력
 	   //리다이렉트는 웹페이지의 자바스크립트, out.print 출력을 못합니다.
+	   
+	   String message = "상품 등록이 완료되었습니다.";
+	   if(result ==0)
+		   message = "상품 등록 오류가 생겼습니다.";
+	   
+	   resp.setContentType("text/html; charset=UTF-8");
+	   PrintWriter out = resp.getWriter();
+	   out.print("<script>");
+	   out.print("alert('"+message+"');");
+	   out.print("location.href='products.cc';");
+	   out.print("</script>");
+		   
 	   
    }
 	

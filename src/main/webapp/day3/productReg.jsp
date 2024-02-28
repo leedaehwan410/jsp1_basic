@@ -11,7 +11,7 @@
 <!-- jsp 파일을 실행할 때는 css 아래와 같이 하고요,,,, -->
 <!-- <link rel="stylesheet"    href="assets/css/register.css" > -->
 <!-- 서블릿으로 화면을 보여 줄 때에는 ????? -->
-<link rel="stylesheet"    href="assets/css/customers.css" >
+<link rel="stylesheet"    href="assets/css/register.css" >
 </head>
 <body>
   <div class="contents-wrap">

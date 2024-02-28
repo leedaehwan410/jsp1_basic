@@ -118,11 +118,14 @@ public class TblProductDao {
         }
 		return list;
 	}
- 
- public void join(ProductVo vo){
+
+ //리턴 타입 int: 정상 insert 완료하면 1 리턴 , 그렇지 않으면 0
+ public int insert(ProductVo vo){
      // 할일1 : SQL 작성하기 (매개변수 표시 정확히 합시다.)
      String sql="insert into tbl_product(pcode,category,pname,price) " + 
                  "values (?, ?, ?, ?)";
+     
+     int result = 0;
      try (Connection connection = getConnection();       //auto close
          PreparedStatement pstmt = connection.prepareStatement(sql);)
          {   
@@ -131,9 +134,10 @@ public class TblProductDao {
              pstmt.setString(2, vo.getCategory());
              pstmt.setString(3, vo.getPname());
              pstmt.setInt(4, vo.getPrice());
-             pstmt.executeUpdate();
+           result =  pstmt.executeUpdate();	//정상 insert 완료하면 1 리턴 ,그렇지 않으면 0 
      } catch (SQLException e) {
-         System.out.println("join 실행 예외 발생 : " + e.getMessage());
+         System.out.println("insert 실행 예외 발생 : " + e.getMessage());
      }
+     return result;
  }
 }

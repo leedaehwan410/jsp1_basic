@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="tblproduct">
+  
+  <!-- 동적쿼리 예시 : 상품 조회에 필요한 검색필터. 아래 4개 중 하나의 쿼리로 실행되게 할 수 있습니다. 
+  					동적쿼리를 위해서 where, if, trim 마이바티스 태그 사용합니다.
+  -->
+  <!-- 예시 : select * from TBL_PRODUCT 
+	where category='B2' and pname like '%' || '사과' || '%'  => 파라미터 2개 모두 있을 때
+		또는
+		select * from TBL_PRODUCT
+		where category= 'B2'	=> keyword 파라미터가 없을 때
+		또는 select = from TBL_PRODUCT 
+		where pname like '%' || '사과' || '%' => category 파라미터가 없을 때
+									또는
+		select * from TBL_PRODUCT  => 파라미터 2개 모두 없을 때
+		 -->
+  
+  <!-- 리턴타입이 List일 때는 제너릭타입만 설정하면 됩니다. -->
+  
+  	<select id="search" resultType="ProductDto" parameterType="java.util.Map">
+  	select * from tbl_product
+  	<!-- if 중 하나라도 조건식이 만들어 질때만 where 가 붙습니다. -->
+  	<where>
+  	<!-- 아래 if 의 test 값은 조건식 입니다. keyword 파라미터값이 null이 아닐때.-->
+  		<if test="keyword!=null">	
+  			pname like '%' || #{keyword} || '%'
+  		</if>
+  		<!-- category 파라미터값이 null 이 아닐때. -->
+  		<if test="category!=null">
+  			<!-- 앞의 조건식 없으면 and 는 trim(제거)-->
+  			<trim prefix="and">
+  			category = #{category}
+  			</trim>
+  		</if>
+  		<if test="from!=null and to!=null">
+  			<trim prefix="and">
+  			price between #{from} and #{to}
+  			</trim>
+  		</if>
+  		<!-- test 논리연산 : and, or -->
+  	</where>
+  	<if test="column!=null">ORDER BY ${column}</if>
+  	</select>
+  	
+  	<!-- 카테고리 가져오기 -->
+  	<select id="getCategories" resultType="mybatis.dto.CateDto">
+  	<!-- 	select distinct category from tbl_product order by category -->
+  		select * from tbl_category order by code
+  	</select>
+  	
+  	
+  	
+  	<select id="selectAll" resultType="productDto">
+  		SELECT * FROM TBL_product ORDER BY pname DESC
+  	</select>
+  	<select id="selectcategory" parameterType="String" resultType="productDto">
+  		SELECT * FROM TBL_PRODUCT WHERE category = #{category} ORDER BY PNAME
+  	</select>
+  	<select id="likeselect" parameterType="String" resultType="productDto">
+  		SELECT * FROM TBL_PRODUCT WHERE PNAME LIKE '%' || #{pname} || '%' ORDER BY CATEGORY
+  	</select>
+  	<select id="pricetable" >
+  		SELECT PCODE , PRICE FROM TBL_PRODUCT
+                
+  	</select>
+  
+  </mapper>
